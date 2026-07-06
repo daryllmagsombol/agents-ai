@@ -77,7 +77,7 @@ flowchart TD
 
 ## Cost & Limits (OpenCode Go)
 
-OpenCode Go is the underlying subscription powering these agents: **$5 first month, then $10/month**.
+**💵 $5 first month → $10/month after. No other fees. That's it.** — OpenCode Go is the underlying subscription powering these agents, with zero hidden costs, no per-request overage, and no surprise bills.
 
 ### Usage Limits by Period
 
@@ -127,35 +127,50 @@ Based on observed average usage patterns across Go subscribers.
 ## Agents
 
 ### 🧠 Team Leader ([`team-leader.md`](team-leader.md))
-**Mode:** primary | **Role:** Orchestrator
+**Mode:** primary | **Role:** Primary Developer & Orchestrator | **Model:** DeepSeek V4 Pro
 
-The top-level agent that coordinates all work. It understands user requirements, breaks them down, delegates to the right subagents, and synthesizes results.
+The top-level agent that both writes code directly and coordinates specialized subagents. It understands user requirements, builds features, fixes bugs, and implements code itself — only delegating when specialized input is needed.
+
+**Phase-aware:**
+- From `/brainstorming` — reviews spec, proceeds to implementation (no re-brainstorming)
+- Direct requests — clarifies, then implements or delegates
+
+**Cross-agent synthesis:**
+- When QA finds security bugs → loops in @security-engineer
+- When Security fixes vulns → requests @qa regression tests
+- Resolves conflicts between subagent outputs
 
 **Delegation targets:**
-- `@qa` — Code quality & testing
-- `@security-engineer` — Security audits
-- `@project-manager` — Task planning & tracking (AI effort estimates)
-- `@ui-ux-designer` — UI/UX design & front-end
+- `@qa` — Code quality, testing, bug hunting
+- `@security-engineer` — Security audits, dependency auditing, CI/CD hardening
+- `@project-manager` — Large-scope task breakdown, AI effort estimation
+- `@ui-ux-designer` — UI/UX design, design systems, accessibility
 
 ### 🧪 QA Engineer ([`qa.md`](qa.md))
-**Mode:** subagent | **Role:** Quality Assurance
+**Mode:** subagent | **Role:** Quality Assurance | **Model:** DeepSeek V4 Pro
 
 Writes tests, reviews code for bugs, analyzes coverage, validates fixes, and ensures best practices for testability.
 
-### 🔒 Security Engineer ([`security-engineer.md`](security-engineer.md))
-**Mode:** subagent | **Role:** Application Security
+**Cross-agent:** Escalates security-implicated bugs to @security-engineer; writes regression tests after vulnerability fixes.
 
-Performs security code reviews, threat modeling, dependency auditing, and checks for OWASP Top 10 vulnerabilities, secrets, and misconfigurations.
+### 🔒 Security Engineer ([`security-engineer.md`](security-engineer.md))
+**Mode:** subagent | **Role:** Application + Infrastructure Security | **Model:** DeepSeek V4 Pro
+
+Performs security code reviews, threat modeling, dependency auditing, and checks for OWASP Top 10 vulnerabilities, secrets, and misconfigurations. Also covers CI/CD pipeline hardening, container security, and supply chain auditing.
+
+**Cross-agent:** Shares vulnerability findings with @qa for targeted regression tests.
 
 ### 📋 Project Manager ([`project-manager.md`](project-manager.md))
-**Mode:** subagent | **Role:** Planning & Tracking
+**Mode:** subagent | **Role:** Planning & Tracking | **Model:** DeepSeek V4 Pro
 
-Breaks down requirements into tasks, estimates **AI effort** (not human effort), identifies dependencies and risks, and tracks progress with status summaries.
+Breaks down requirements into tasks, estimates **AI effort** (by tool call count, not human hours), identifies dependencies and risks, and tracks progress with status summaries.
 
 ### 🎨 UI/UX Designer ([`ui-ux-designer.md`](ui-ux-designer.md))
-**Mode:** subagent | **Role:** Design & Front-End
+**Mode:** subagent | **Role:** Design & Front-End | **Model:** DeepSeek V4 Pro
 
 Creates design systems, responsive layouts, accessible components, and user flows. Covers UI design, UX design, front-end architecture, and accessibility (WCAG 2.1 AA).
+
+**Cross-agent:** Shares new components with @qa for visual regression tests; consults @security-engineer on auth flows and data-sensitive UI patterns.
 
 ## Skills
 
